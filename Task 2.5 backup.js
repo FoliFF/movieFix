@@ -1,5 +1,5 @@
 /* List of Movies from Task 2.5*/
-/*
+
 let movies = [ 
 {
   Title: 'Inception',
@@ -61,4 +61,4 @@ let movies = [
   ImagePath: "https://www.imdb.com/title/tt0060196/mediaviewer/rm1383786241/",
   Featured: true
 }];
-*/
+
