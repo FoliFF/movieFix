@@ -163,9 +163,10 @@ app.get('/movies/:Title', (req, res) => {
 }); 
 
 /*** READ MOVIE GENRE ***/
-app.get('/genre/:Name', (req, res) => {
-  Genres.findOne({ Name: req.params.Name }).then((genre) => {
-    res.json(genre.Description);
+app.get('/genres/:Name', (req, res) => {
+  Movies.findOne({ 'Genre.Name': req.params.Name })
+  .then((movie) => {
+    res.json(movie.Genre.Description);    
   })
   .catch((err) => {
     console.error(err);
@@ -174,9 +175,9 @@ app.get('/genre/:Name', (req, res) => {
 }); 
 
 /*** READ MOVIE DIRECTOR ***/
-app.get('/director/:Name', (req, res) => {
-  Directors.findOne({ Name: req.params.Name }).then((director) => {
-    res.json(director);
+app.get('/directors/:Name', (req, res) => {
+  Movies.findOne({ 'Director.Name': req.params.Name }).then((movie) => {
+    res.json(movie.Director);    
   })
   .catch((err) => {
     console.error(err);
@@ -205,9 +206,7 @@ app.listen(8080, () => {
 /* Logging with Morgan */
 app.use(morgan('common'));
 
-/* END OF Logging with Morgan */
-
-/* Error Handling */
+/* Error Handler */
 const methodOverride = require('method-override');
 
 app.use(bodyParser.urlencoded({
@@ -221,4 +220,4 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
-/* END OF Error Handling */
+/* END OF Error Handler */
