@@ -17,8 +17,9 @@ app.use(bodyParser.json());
 
 app.use(express.static('public')); //This is for documentation.html in public folder.
 
+
 /*** Intergrating auth.js file for authentication and authorization using HTTP and JWSToken ***/
-let auth = require('./auth')(app);
+let auth = require('./auth')(app); // it is placed here because it needs to be AFTER body parser is called.
 const passport = require('passport');
 require('./passport');
 
@@ -59,7 +60,7 @@ app.post('/users', passport.authenticate('jwt', { session: false}), (req, res) =
 });
 
 /*** GET USERS ***/
-app.get('/users', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.get('/users', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
   Users.find().then((users) => {
     res.status(200).json(users);
   })
@@ -89,9 +90,9 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false}), (re
 });
 
 /*** ADD MOVIE TO USER ***/
-app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.post('/users/:Username/movies/:MovieID', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
-    $push: { favoriteMovies: req.params.MovieID }
+    $push: { FavoriteMovies: req.params.MovieID }
   }, {new: true }, // This line makes sure that the updated document is returned
   (err, updatedUser) => {
     if(err){
@@ -104,9 +105,9 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
 });
 
 /*** DELETE MOVIE FROM USER ***/
-app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
-    $pull: { favoriteMovies: req.params.MovieID }
+    $pull: { FavoriteMovies: req.params.MovieID }
   }, {new: true }, // This line makes sure that the updated document is returned
   (err, updatedUser) => {
     if(err){
@@ -178,7 +179,7 @@ app.post('/movies', passport.authenticate('jwt', { session: false}), (req, res) 
 });
 
 /*** READ MOVIES Return JSON object when at /movies ***/
-app.get('/movies', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.get('/movies', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
   Movies.find().then((movies) => {
     res.status(201).json(movies);
   })
@@ -200,10 +201,10 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false}), (req,
 }); 
 
 /*** READ MOVIE GENRE ***/
-app.get('/genre/:name', passport.authenticate('jwt', { session: false}), (req, res) => {
-  Movies.findOne({ 'Genre.Name': req.params.Name })
+app.get('/genre/:name', /*passport.authenticate('jwt', { session: false}),*/ (req, res) => {
+  Movies.find({ 'Genre.Name': req.params.name })
   .then((movie) => {
-    res.json(movie.Genre.Description);    
+    res.json(movie);    
   })
   .catch((err) => {
     console.error(err);
@@ -212,9 +213,9 @@ app.get('/genre/:name', passport.authenticate('jwt', { session: false}), (req, r
 }); 
 
 /*** READ MOVIE DIRECTOR ***/
-app.get('/director/:name', passport.authenticate('jwt', { session: false}), (req, res) => {
-  Movies.findOne({ 'Director.Name': req.params.Name }).then((movie) => {
-    res.json(movie.Director);    
+app.get('/director/:name', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
+  Movies.find({ 'Director.Name': req.params.name }).then((movie) => {
+    res.json(movie);    
   })
   .catch((err) => {
     console.error(err);
