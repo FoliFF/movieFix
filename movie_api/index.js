@@ -60,7 +60,7 @@ app.post('/users', passport.authenticate('jwt', { session: false}), (req, res) =
 });
 
 /*** GET USERS ***/
-app.get('/users', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.find().then((users) => {
     res.status(200).json(users);
   })
@@ -90,7 +90,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false}), (re
 });
 
 /*** ADD MOVIE TO USER ***/
-app.post('/users/:Username/movies/:MovieID', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
     $push: { FavoriteMovies: req.params.MovieID }
   }, {new: true }, // This line makes sure that the updated document is returned
@@ -105,7 +105,7 @@ app.post('/users/:Username/movies/:MovieID', /*passport.authenticate('jwt', { se
 });
 
 /*** DELETE MOVIE FROM USER ***/
-app.delete('/users/:Username/movies/:MovieID', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
     $pull: { FavoriteMovies: req.params.MovieID }
   }, {new: true }, // This line makes sure that the updated document is returned
@@ -179,7 +179,7 @@ app.post('/movies', passport.authenticate('jwt', { session: false}), (req, res) 
 });
 
 /*** READ MOVIES Return JSON object when at /movies ***/
-app.get('/movies', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false}), (req, res) => {
   Movies.find().then((movies) => {
     res.status(201).json(movies);
   })
@@ -201,7 +201,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false}), (req,
 }); 
 
 /*** READ MOVIE GENRE ***/
-app.get('/genre/:name', /*passport.authenticate('jwt', { session: false}),*/ (req, res) => {
+app.get('/genre/:name', passport.authenticate('jwt', { session: false}), (req, res) => {
   Movies.find({ 'Genre.Name': req.params.name })
   .then((movie) => {
     res.json(movie);    
@@ -213,7 +213,7 @@ app.get('/genre/:name', /*passport.authenticate('jwt', { session: false}),*/ (re
 }); 
 
 /*** READ MOVIE DIRECTOR ***/
-app.get('/director/:name', /*passport.authenticate('jwt', { session: false}), */(req, res) => {
+app.get('/director/:name', passport.authenticate('jwt', { session: false}), (req, res) => {
   Movies.find({ 'Director.Name': req.params.name }).then((movie) => {
     res.json(movie);    
   })
@@ -251,7 +251,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use(bodyParser.json());
 app.use(methodOverride());
 
 app.use((err, req, res, next) => {
