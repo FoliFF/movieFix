@@ -17,6 +17,8 @@ app.use(bodyParser.json());
 
 app.use(express.static('public')); //This is for documentation.html in public folder.
 
+const cors = require('cors');
+app.use(cors());
 
 /*** Intergrating auth.js file for authentication and authorization using HTTP and JWSToken ***/
 let auth = require('./auth')(app); // it is placed here because it needs to be AFTER body parser is called.
@@ -24,17 +26,26 @@ const passport = require('passport');
 require('./passport');
 
 /*** CREATE USERS ***/
-/* We’ll expect JSON in this format
-{
-  ID: Integer,
-  Username: String,
-  Password: String,
-  Email: String,
-  Birthday: Date
-} */
+app.post('/users', 
+  /* Validation logic here for request
+  you can either use a chain of methods like .not().isEmpty()
+  which means "opposite of isEmpty" in plain english "is not empty"
+  or use .isLength({min: 5}) which means
+  minimum value of 5 characters are only allowed */
+  [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail(),
+  ], (req, res) => {
+    // check the validation object for errors
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
 
-app.post('/users', passport.authenticate('jwt', { session: false}), (req, res) => {
-  Users.findOne({ Username: req.body.Username })
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
     .then((user) => {
       if (user) {
         return res.status(400).send(req.body.Username + 'already exists');
@@ -42,14 +53,14 @@ app.post('/users', passport.authenticate('jwt', { session: false}), (req, res) =
         Users
           .create({
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: req.body.hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
           .then((user) =>{res.status(201).json(user) })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send('Error: ' + error);
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
         })
       }
     })
@@ -234,9 +245,13 @@ app.get('/documentation', (req, res) => {
 /**** END OF GET REQUEST ****/
 
 // Listen For REQUEST
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+ console.log('Listening on Port ' + port);
 });
+
+
 
 
 /************************************************/
@@ -246,6 +261,7 @@ app.use(morgan('common'));
 
 /* Error Handler */
 const methodOverride = require('method-override');
+const { check } = require('express-validator');
 
 app.use(bodyParser.urlencoded({
   extended: true
