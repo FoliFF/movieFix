@@ -20,10 +20,31 @@ app.use(express.static('public')); //This is for documentation.html in public fo
 const cors = require('cors');
 app.use(cors());
 
+const { check, validationResult } = require('express-validator');
+
 /*** Intergrating auth.js file for authentication and authorization using HTTP and JWSToken ***/
 let auth = require('./auth')(app); // it is placed here because it needs to be AFTER body parser is called.
 const passport = require('passport');
 require('./passport');
+
+/*** Logging with Morgan ***/
+app.use(morgan('common'));
+
+/*** Error Handler ***/
+const methodOverride = require('method-override');
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+app.use(methodOverride());
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+/*** END OF Error Handler ***/
+
 
 /*** CREATE USERS ***/
 app.post('/users', 
@@ -243,30 +264,9 @@ app.get('/documentation', (req, res) => {
 
 /**** END OF GET REQUEST ****/
 
-// Listen For REQUEST
+/*** Listen For REQUEST ***/
 
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
  console.log('Listening on Port ' + port);
 });
-
-/************************************************/
-
-/* Logging with Morgan */
-app.use(morgan('common'));
-
-/* Error Handler */
-const methodOverride = require('method-override');
-const { check } = require('express-validator');
-
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
-app.use(methodOverride());
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
-/* END OF Error Handler */
