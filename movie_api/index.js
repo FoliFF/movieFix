@@ -130,7 +130,6 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
   });
 });
 
-
 /*** DELETE USER ***/
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false}), (req, res) => {
   Users.findOneAndRemove( { Username: req.params.Username }).then((user) => {
@@ -250,9 +249,6 @@ const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
  console.log('Listening on Port ' + port);
 });
-
-
-
 
 /************************************************/
 
