@@ -32,22 +32,23 @@
                         <td>GET</td>
                         <td>/movies</td>
                         <td>
-                            JSON Object with a list of all top movies
+                            JSON Object with a list of all movies in the database
                             <pre>
                                 {
-                                    Title: String,
-                                    Director: {
-                                        Name: String,
-                                        Bio: String,
-                                        Born: String
-                                    },
-                                    Stars: [String],
                                     Genre: {
                                         Name: String,
                                         Description: String
                                     },
+                                    Director: {
+                                        Name: String,
+                                        Bio: String,
+                                        Birth: String
+                                    },
+                                    Title: Sting,
+                                    Description: String,
                                     Featured: Boolean,
-                                    ImageUrl: String
+                                    ImagePath: String,
+                                    Stars: [String]
                                 }
                             </pre>
                         </td>
@@ -59,32 +60,44 @@
                             JSON containing details about movie by title
                             <pre>
                                 {
-                                    Title: String,
-                                    Director: {
-                                        Name: String,
-                                        Bio: String,
-                                        Born: String
-                                    },
-                                    Stars: [String],
                                     Genre: {
                                         Name: String,
                                         Description: String
                                     },
+                                    Director: {
+                                        Name: String,
+                                        Bio: String,
+                                        Birth: String
+                                    },
+                                    _id: String,
+                                    Title: Sting,
+                                    Description: String,
                                     Featured: Boolean,
-                                    ImageUrl: String
+                                    ImagePath: String,
+                                    Stars: [String]
                                 }
                             </pre>
                         </td>
                     </tr>
                     <tr>
                         <td>GET</td>
-                        <td>/movies/genres/[title]</td>
+                        <td>/genres/[title]</td>
                         <td>
-                            Details about Genre of movie by title
+                            JSON containing details of all movies that shares the same Genre title
                             <pre>
-                                Genre: {
-                                    Name: String,
-                                    Description: String
+                                {
+                                    Genre: String,
+                                    Director: {
+                                        Name: String,
+                                        Bio: String,
+                                        Birth: String
+                                    },
+                                    _id: String,
+                                    Title: Sting,
+                                    Description: String,
+                                    Featured: Boolean,
+                                    ImagePath: String,
+                                    Stars: [String]
                                 }
                             </pre>
                         </td>
@@ -94,35 +107,68 @@
                         <td>GET</td>
                         <td>/directors/[name]</td>
                         <td>
-                            Details about director by name
+                            JSON containing details of all movies that shares the same Director by name
                             <pre>
-                                Director: {
-                                    Name: String,
-                                    Bio: String,
-                                    Born: String
+                                {
+                                    Genre: String,
+                                    Director: {
+                                        Name: String,
+                                        Bio: String,
+                                        Birth: String
+                                    },
+                                    _id: String,
+                                    Title: Sting,
+                                    Description: String,
+                                    Featured: Boolean,
+                                    ImagePath: String,
+                                    Stars: [String]
                                 }
                             </pre>
                         </td>
                     </tr>
                     <tr>
                         <td>POST</td>
-                        <td>/users</td>
-                        <td>Allows user to register</td>
+                        <td>/users/[name]</td>
+                        <td>Allows user to register
+                            <pre>
+                                {
+                                    Username: String,
+                                    Password: String,,
+                                    Email: String,,
+                                    Birthday: String,
+                                }
+                            </pre>
+                        </td>
+                            
                     </tr>
                     <tr>
                         <td>PUT</td>
-                        <td>/users/[id]</td>
-                        <td>Allows user to update their information</td>
+                        <td>/users/[name]</td>
+                        <td>Allows user to update their information
+                            <pre>
+                                {
+                                    Username: String,
+                                    Password: String,,
+                                    Email: String,,
+                                    Birthday: String,
+                                }
+                            </pre>
+                        </td>
                     </tr>
                     <tr>
                         <td>POST</td>
-                        <td>/users/[id]/[title]</td>
+                        <td>/users/[name]/moives/[id]</td>
                         <td>Allows user to add movie to their list of favorites</td>
                     </tr>
                     <tr>
                         <td>DELETE</td>
                         <td>/users/[name]</td>
                         <td>Allows user to delete the account</td>
+                    </tr>
+                    <tr>
+                        <td>DELETE</td>
+                        <td>/users/[name]/moives/[id]</td>
+                        <td>Allows user to remove movie from their list of favorites</td>
                     </tr>
                 </tbody>
             </table>
