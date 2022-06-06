@@ -183,7 +183,7 @@ app.get('/documentation', (req, res) => {
   Director: String
 } */
 
-app.post('/movies', (req, res) => {
+app.post('/movies', passport.authenticate('jwt'), (req, res) => {
   Movies.findOne({ Title: req.body.Title })
     .then((movie) => {
       if (movie) {
