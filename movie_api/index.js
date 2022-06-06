@@ -183,7 +183,7 @@ app.get('/documentation', (req, res) => {
   Director: String
 } */
 
-app.post('/movies', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.post('/movies', /*passport.authenticate('jwt', { session: false}),*/ (req, res) => {
   Movies.findOne({ Title: req.body.Title })
     .then((movie) => {
       if (movie) {
@@ -210,7 +210,7 @@ app.post('/movies', passport.authenticate('jwt', { session: false}), (req, res) 
 });
 
 /*** READ MOVIES Return JSON object when at /movies ***/
-app.get('/movies', passport.authenticate('jwt', { session: false}), (req, res) => {
+app.get('/movies', /*passport.authenticate('jwt', { session: false}),*/ (req, res) => {
   Movies.find().then((movies) => {
     res.status(201).json(movies);
   })
