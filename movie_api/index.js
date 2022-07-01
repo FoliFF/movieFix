@@ -220,7 +220,7 @@ app.post('/movies', passport.authenticate('jwt'), (req, res) => {
 });
 
 /*** READ MOVIES Return JSON object when at /movies ***/
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find().then((movies) => {
     res.status(201).json(movies);
   })
