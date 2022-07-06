@@ -19,6 +19,8 @@ app.use(express.static('public')); //This is for documentation.html in public fo
 
 let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234'];
 const cors = require('cors');
+app.use(cors());
+/*
 app.use(cors({
   origin: (origin, callback) => {
     if(!origin) return callback(null, true);
@@ -29,7 +31,7 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-
+*/
 const { check, validationResult } = require('express-validator');
 
 /*** Intergrating auth.js file for authentication and authorization using HTTP and JWSToken ***/
