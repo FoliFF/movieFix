@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 app.use(express.static('public')); //This is for documentation.html in public folder.
 
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234'];
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'https://foliffmovieflix.netlify.app/'];
 const cors = require('cors');
 //app.use(cors());
 app.use(cors({
