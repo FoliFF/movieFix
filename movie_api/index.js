@@ -111,7 +111,17 @@ app.get('/users', passport.authenticate('jwt', { session: false}), (req, res) =>
     console.error(err);
     res.status(500).send('Error: ' + err);
   });  
-}); 
+});
+
+app.get('/users/:Username', passport.authenticate('jwt', { session: false}), (req, res) => {
+  Users.findOne({ Username: req.params.Username }).then((users) => {
+    res.status(200).json(users);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });  
+});
 
 /*** UPDATE USERS ***/
 app.put('/users/:Username', passport.authenticate('jwt', { session: false}), (req, res) => {
